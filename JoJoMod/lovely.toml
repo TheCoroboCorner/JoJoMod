@@ -1,0 +1,77 @@
+[manifest]
+version = "0.8.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "G.GAME.pack_choices = self.ability.choose or self.config.center.config.choose or 1"
+position = "after"
+payload = '''
+G.GAME.pack_choices = math.min(G.GAME.pack_choices + (G.GAME.choose_mod or 0), self.config.center.config.extra)
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/game_object.lua"]'
+pattern = 'vars = { cfg.choose, cfg.extra },'
+position = "at"
+payload = 'vars = { math.min(cfg.choose + (G.GAME.choose_mod or 0), cfg.extra), cfg.extra },'
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''
+G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+    play_sound('tarot2', 0.76, 0.4);return true end}))
+play_sound('tarot2', 1, 0.4)
+used_tarot:juice_up(0.3, 0.5)
+'''
+position = "after"
+payload = '''
+SMODS.calculate_context({failed_wheel = true})
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = '''
+draw_card(G.play,G.discard, it*100/play_count,'down', false, v)
+'''
+position = "at"
+payload = '''
+if next(SMODS.find_card("j_jojo_requiem_theWorld")) then
+	draw_card(G.play, G.deck, it*100/play_count, 'down', false, v)
+else
+    draw_card(G.play, G.discard, it*100/play_count, 'down', false, v)
+end
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = '''
+G.hand.highlighted[i].ability.discarded = true
+draw_card(G.hand, G.discard, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])
+'''
+position = "at"
+payload = '''
+if next(SMODS.find_card("j_jojo_requiem_goldExperience")) then
+    G.hand.highlighted[i].ability.discarded = true
+    draw_card(G.hand, G.deck, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])
+else
+    G.hand.highlighted[i].ability.discarded = true
+    draw_card(G.hand, G.discard, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])
+end
+'''
+match_indent = true
+times = 1

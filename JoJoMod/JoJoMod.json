@@ -1,0 +1,16 @@
+{
+	"id": "JoJoMod",
+	"name": "JoJo Mod",
+	"author": ["TheCoroboCorner"],
+	"description": "Adds various Stands (perhaps one may call them JoJokers) to Balatro. Please excuse the poor quality, this is my first mod.",
+	"prefix": "jojo",
+	"main_file": "JoJoMod.lua",
+	"badge_colour": "2a0057",
+	"dependencies": [
+		"Steamodded (>=1.0.0~ALPHA-1225a)"
+	],
+	"conflicts": [
+		"incantation"
+	],
+	"version": "0.8.0"
+}
