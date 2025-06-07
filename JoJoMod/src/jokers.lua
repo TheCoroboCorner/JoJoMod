@@ -10,6 +10,9 @@ SMODS.Joker {
 	config = {extra = {mult_added = 1, mult_mod = 0, time_chips = 0, time_mult = 0, 
 	descP1 = 'This Stand appears to have more', descP2 = 'potential hidden deep within...'}},
 	
+	atlas = "jokers",
+	pos = { x = 0, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.mult_added, card.ability.extra.mult_mod,
 		card.ability.extra.time_chips, card.ability.extra.time_mult,
@@ -110,6 +113,9 @@ SMODS.Joker {
 	key = 'stand_magiciansRed',
 	config = {extra = {destroyed = 0}},
 	
+	atlas = "jokers",
+	pos = { x = 1, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.destroyed}}
 	end,
@@ -156,6 +162,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 8,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 2, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {
 					card.ability.extra.rank,
@@ -177,6 +187,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 6,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 3, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {G.GAME.probabilities.normal, card.ability.extra.odds}}
 	end,
@@ -202,6 +216,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 10,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 4, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.chips, card.ability.extra.mult}}
 	end,
@@ -239,6 +257,10 @@ SMODS.Joker {
 	rarity = 1,
 	cost = 4,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 5, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.bonusChipsGlass, card.ability.extra.bonusChipsFrozen } }
 	end,
@@ -263,6 +285,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 6,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 6, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.chipIncrement, card.ability.extra.handVelocity, card.ability.extra.bonusChips } }
 	end,
@@ -290,6 +316,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 9,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 7, y = 0 },
+	
 	add_to_deck = function(self, card, from_debuff)
 		for k, v in pairs(G.GAME.probabilities) do
 			G.GAME.probabilities[k] = v * 3
@@ -308,6 +338,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 7,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 8, y = 0 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.reward, card.ability.extra.hand}}
 	end,
@@ -353,6 +387,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 5,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 0, y = 1 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.currentSold, card.ability.extra.requiredSold}}
 	end,
@@ -390,6 +428,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 10,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 1, y = 1 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {}
 	end,
@@ -424,6 +466,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 7,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 2, y = 1 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {}
 	end,
@@ -443,6 +489,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 3,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 3, y = 1 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.chips, card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.speed } }
 	end,
@@ -489,6 +539,9 @@ SMODS.Joker {
 	cost = 20,
 	blueprint_compat = false,
 	
+	atlas = "jokers",
+	pos = { x = 4, y = 1 },
+	
 	calculate = function(self, card, context)
 		if context.card_added and context.card.ability.extra then
 			for key, entry in pairs(context.card.ability.extra) do
@@ -511,6 +564,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 5,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 5, y = 1 },
+	
 	calculate = function(self, card, context)
 		if context.setting_blind and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
 			local probability = pseudorandom('harvest' .. G.GAME.round_resets.ante)
@@ -611,6 +668,9 @@ SMODS.Joker {
 	cost = 7,
 	blueprint_compat = false,
 	
+	atlas = "jokers",
+	pos = { x = 6, y = 1 },
+	
 	calculate = function(self, card, context)
 		if context.consumeable and not context.blueprint then
 			if context.consumeable.config.center.key == "c_jojo_standArrow" then
@@ -637,6 +697,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 6,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 7, y = 1 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.readyToShoot } }
 	end,
@@ -675,6 +739,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 9,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 8, y = 1 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {localize(card.ability.extra.rank, 'ranks'), card.ability.extra.rank}}
 	end,
@@ -726,6 +794,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 5,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 0, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.reward}}
 	end,
@@ -751,6 +823,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 7,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 1, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {G.GAME.probabilities.normal, card.ability.extra.odds}}
 	end,
@@ -785,6 +861,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 8,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 2, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.selectionLimit}}
 	end,
@@ -804,7 +884,10 @@ SMODS.Joker {
 SMODS.Joker {
 	key = 'stand_blackSabbath',
 	rarity = 3,
-	cost = 7
+	cost = 7,
+	
+	atlas = "jokers",
+	pos = { x = 3, y = 2 },
 }
 
 SMODS.Joker {
@@ -813,6 +896,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 10,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 4, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		if card.area and card.area == G.jokers then
 			local other_joker
@@ -858,6 +945,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 7,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 5, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.bulletCount}}
 	end,
@@ -902,6 +993,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 7,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 6, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = {card.ability.extra.incrXmult, card.ability.extra.xmult} }
 	end,
@@ -970,6 +1065,10 @@ SMODS.Joker {
 	rarity = 1,
 	cost = 5,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 7, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.consumableSlots}}
 	end,
@@ -991,6 +1090,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 8,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 8, y = 2 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.ageUpAmount } }
 	end,
@@ -1067,6 +1170,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 8,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 0, y = 3 },
+	
 	calculate = function(self, card, context)
 		if context.before and context.main_eval then
 			local randomCard = pseudorandom_element(context.scoring_hand, pseudoseed('whiteAlbum' .. G.GAME.round_resets.ante))
@@ -1082,6 +1189,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 6,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 1, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return { vars = { G.GAME.probabilities.normal, card.ability.extra.odds } }
 	end,
@@ -1116,6 +1227,10 @@ SMODS.Joker {
 	rarity = 3,
 	cost = 12,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 2, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult}}
 	end,
@@ -1151,6 +1266,10 @@ SMODS.Joker {
 	rarity = 1,
 	cost = 5,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 3, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.reward, card.ability.extra.luckyHand, card.ability.extra.unluckyHand}}
 	end,
@@ -1213,6 +1332,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 8,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 4, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
 	end,
@@ -1234,6 +1357,10 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 7,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 5, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {}
 	end,
@@ -1271,13 +1398,17 @@ SMODS.Joker {
 	rarity = 2,
 	cost = 6,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 6, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.rank}}
 	end,
 	
 	calculate = function(self, card, context)
 		if context.individual and context.cardarea == G.play then
-			if context.other_card.base.value == card.ability.extra.rank and (G.consumeables.card and #G.consumeables.card or 1) + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+			if context.other_card.base.value == card.ability.extra.rank and (G.consumeables.cards and #G.consumeables.cards or 1) + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
 				G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
 				G.E_MANAGER:add_event(Event({
 					func = (function()
@@ -1330,6 +1461,10 @@ SMODS.Joker {
 	rarity = 1,
 	cost = 1,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 7, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.jokerSlots}}
 	end,
@@ -1351,6 +1486,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 8, y = 3 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {G.GAME.probabilities.normal, card.ability.extra.odds}}
 	end,
@@ -1449,6 +1588,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 0, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.hands, card.ability.extra.chips, card.ability.extra.mult}}
 	end,
@@ -1489,6 +1632,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = false,
+	
+	atlas = "jokers",
+	pos = { x = 1, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.reward}}
 	end,
@@ -1521,6 +1668,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 2, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.discards}}
 	end,
@@ -1558,6 +1709,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 3, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult}}
 	end,
@@ -1601,12 +1756,16 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 4, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult, card.ability.extra.timesspeed, card.ability.extra.speedincrement}}
 	end,
 	
 	calculate = function(self, card, context)
-		if context.setting_blind then
+		if context.setting_blind and not context.retrigger_joker and not context.blueprint then
 			card.ability.extra.timesspeed = card.ability.extra.timesspeed + card.ability.extra.speedincrement
 			return { message = localize('k_upgrade_ex'), colour = G.C.GREEN, message_card = card }
 		end
@@ -1648,6 +1807,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 5, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
 	end,
@@ -1669,6 +1832,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 6, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
 	end,
@@ -1690,6 +1857,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 7, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.negativeBonus, card.ability.extra.totalXmult}}
 	end,
@@ -1716,6 +1887,10 @@ SMODS.Joker {
 	rarity = "jojo_requiem",
 	cost = 50,
 	blueprint_compat = true,
+	
+	atlas = "jokers",
+	pos = { x = 8, y = 4 },
+	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {}}
 	end,

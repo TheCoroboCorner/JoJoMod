@@ -265,7 +265,8 @@ return {
 				text = {
 					"If played hand contains a {C:attention}#1#{},",
 					"create a {C:tarot,T:c_death}Death{} Tarot card,",
-					"rank changes every round"
+					"rank changes every round",
+					"{C:inactive}(Must have room)"
 					
 				}
 			},
