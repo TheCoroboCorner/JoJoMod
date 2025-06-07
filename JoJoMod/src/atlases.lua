@@ -6,7 +6,7 @@ SMODS.Atlas {
 }
 
 SMODS.Atlas {
-	key = 'jokers',
+	key = 'stands',
 	path = 'jokers.png',
 	px = 71,
 	py = 95
