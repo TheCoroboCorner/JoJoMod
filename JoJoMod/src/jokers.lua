@@ -148,15 +148,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-	key = 'stand_hermitPurple',
-	loc_txt = {
-		name = 'Hermit Purple',
-		text = {
-			"\"...and the {C:attention}next card{} you\'ll draw",
-			"will be a {C:attention, s:1.1}#1# of #2#{}!\""
-		}
-	},
-	
+	key = 'stand_hermitPurple',	
 	config = {extra = {rank = (G.deck and G.deck.cards[1] and G.deck.cards[#G.deck.cards].base.value or "Ace"),
 					   suit = (G.deck and G.deck.cards[1] and G.deck.cards[#G.deck.cards].base.suit or "Diamonds")}},
 	rarity = 2,
@@ -167,10 +159,12 @@ SMODS.Joker {
 	pos = { x = 2, y = 0 },
 	
 	loc_vars = function(self, info_queue, card)
-		return {vars = {
-					card.ability.extra.rank,
-					card.ability.extra.suit
-				}}
+		return {
+			vars = {
+				card.ability.extra.rank,
+				card.ability.extra.suit
+			}
+		}
 	end,
 	
 	calculate = function(self, card, context)
@@ -516,6 +510,43 @@ SMODS.Joker {
 			elseif key == 'c_jojo_doppio' then
 				card.ability.extra.speed = card.ability.extra.speed + context.consumeable.config.extra.speed
 			end
+		end
+		if context.card_added and context.card.ability.consumeable then
+			local key = context.card.config.center.key
+			
+			if key == 'c_jojo_water' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_refinedWater' })
+			elseif key == 'c_jojo_tomatoes' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_tomatoSalad' })
+			elseif key == 'c_jojo_spaghetti' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_harlotSpaghetti' })
+			elseif key == 'c_jojo_meat' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_meatAppleSauce' })
+			elseif key == 'c_jojo_caramel' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_flan' })
+			elseif key == 'c_jojo_bread' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_bruschetta' })
+			elseif key == 'c_jojo_dough' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_pizza' })
+			elseif key == 'c_jojo_mozzarella' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_carrozza' })
+			elseif key == 'c_jojo_ricotta' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_cannolo' })
+			elseif key == 'c_jojo_beans' then
+				SMODS.destroy_cards(context.card)
+				SMODS.add_card({ key = 'c_jojo_doppio' })
+			end
+			
+			return { message = localize('k_upgrade_ex') }
 		end
 		if context.joker_main then
 			return { chips = card.ability.extra.chips, mult = card.ability.extra.mult, xmult = card.ability.extra.xmult }
@@ -1489,7 +1520,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 7, y = 3 },
-	-- soul_pos = { x = 8, y = 3 },
+	soul_pos = { x = 8, y = 3 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {G.GAME.probabilities.normal, card.ability.extra.odds}}
@@ -1580,23 +1611,6 @@ SMODS.Joker {
 				}))
 			end
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 8, y = 3 })
-	
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -1609,7 +1623,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 0, y = 4 },
-	-- soul_pos = { x = 1, y = 4 },
+	soul_pos = { x = 1, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.hands, card.ability.extra.chips, card.ability.extra.mult}}
@@ -1642,23 +1656,6 @@ SMODS.Joker {
 			
 			return {message = 'Time has begun to move again...', colour = G.C.GOLD}
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 1, y = 4 })
-	
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -1671,7 +1668,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 2, y = 4 },
-	-- soul_pos = { x = 3, y = 4 },
+	soul_pos = { x = 3, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.reward}}
@@ -1696,23 +1693,6 @@ SMODS.Joker {
 				return { remove = true }
 			end
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 3, y = 4 })
-	
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -1725,7 +1705,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 4, y = 4 },
-	-- soul_pos = { x = 5, y = 4 },
+	soul_pos = { x = 5, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.discards}}
@@ -1755,23 +1735,6 @@ SMODS.Joker {
 				}
 			end
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 5, y = 4 })
-		
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -1784,7 +1747,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 6, y = 4 },
-	-- soul_pos = { x = 7, y = 4 },
+	soul_pos = { x = 7, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult}}
@@ -1820,23 +1783,6 @@ SMODS.Joker {
 				xmult = card.ability.extra.timesmult
 			}
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 7, y = 4 })
-		
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -1849,7 +1795,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 8, y = 4 },
-	-- soul_pos = { x = 0, y = 5 },
+	soul_pos = { x = 0, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult, card.ability.extra.timesspeed, card.ability.extra.speedincrement}}
@@ -1889,23 +1835,6 @@ SMODS.Joker {
 				xmult = card.ability.extra.timesmult
 			}
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 0, y = 5 })
-		
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -1918,7 +1847,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 1, y = 5 },
-	-- soul_pos = { x = 2, y = 5 },
+	soul_pos = { x = 2, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
@@ -1931,23 +1860,6 @@ SMODS.Joker {
 		if context.failed_wheel and not context.blueprint then
 			card.ability.extra.totalXmult = card.ability.extra.totalXmult + card.ability.extra.incrXmult
 			return { message = localize('k_upgrade_ex') }
-		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 2, y = 5 })
-	
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
 		end
 	end
 }
@@ -1961,7 +1873,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 3, y = 5 },
-	-- soul_pos = { x = 4, y = 5 },
+	soul_pos = { x = 4, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
@@ -1975,23 +1887,6 @@ SMODS.Joker {
 			card.ability.extra.totalXmult = card.ability.extra.totalXmult + card.ability.extra.incrXmult
 			return { message = localize('k_upgrade_ex') }
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 4, y = 5 })
-		
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -2004,7 +1899,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 5, y = 5 },
-	-- soul_pos = { x = 6, y = 5 },
+	soul_pos = { x = 6, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.negativeBonus, card.ability.extra.totalXmult}}
@@ -2023,23 +1918,6 @@ SMODS.Joker {
 				x_chips = card.ability.extra.negativeBonus
 			}
 		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 6, y = 5 })
-		
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-		end
 	end
 }
 
@@ -2052,7 +1930,7 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 7, y = 5 },
-	-- soul_pos = { x = 8, y = 5 },
+	soul_pos = { x = 8, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {}}
@@ -2081,23 +1959,6 @@ SMODS.Joker {
 					}))
 				end
 			}
-		end
-	end,
-	
-	draw = function(self, card, layer)
-		local sprite = Sprite(0, 0, G.CARD_W, G.CARD_H, G.ASSET_ATLAS['jojo_stands'], { x = 8, y = 5 })
-		
-		if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
-			local scale_mod = 0.05 + 0.05 * math.sin(1.8 * G.TIMERS.REAL) +
-				0.07 * math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL)) * math.pi * 14) *
-				(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 3
-			local rotate_mod = 0.1 * math.sin(1.219 * G.TIMERS.REAL) + 
-				0.07 * math.sin((G.TIMERS.REAL) * math.pi * 5) * (1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL))) ^ 2
-				
-			sprite.role.draw_major = card
-			sprite:draw_shader('dissolve', 0, nil, nil, card.children.center, scale_mod, rotate_mod, nil,
-				0.1 + 0.03 * math.sin(1.8 * G.TIMERS.REAL), nil, 0.6)
-			sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
 		end
 	end
 }

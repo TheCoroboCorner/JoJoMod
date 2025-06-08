@@ -21,6 +21,13 @@ return {
 					"until end of round"
 				}
 			},
+			j_jojo_stand_hermitPurple = {
+				name = 'Hermit Purple',
+				text = {
+					"\"...and the {C:attention}next card{} you\'ll draw",
+					"will be the {C:attention, s:1.1}#1# of #2#{}!\""
+				}
+			},
 			j_jojo_stand_silverChariot = {
 				name = 'Silver Chariot',
 				text = {
