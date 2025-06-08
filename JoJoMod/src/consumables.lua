@@ -169,8 +169,8 @@ SMODS.Consumable {
 	soul_set = 'Tarot',
 	
 	atlas = 'items',
-	pos = { x = 0, y = 0 },	
-	soul_pos = { x = 1, y = 0 },
+	pos = { x = 4, y = 4 },	
+	soul_pos = { x = 5, y = 4 },
 	
 	use = function(self, card, area, copier)
 		local key = G.jokers.highlighted[1].config.center.key
@@ -252,7 +252,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 2, y = 0 },	
+	pos = { x = 2, y = 2 },	
 	
 	use = function(self, card, area, copier)
 		G.E_MANAGER:add_event(Event({
@@ -285,7 +285,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 3, y = 0 },	
+	pos = { x = 3, y = 2 },	
 
 	use = function(self, card, area, copier)
 		G.E_MANAGER:add_event(Event({
@@ -365,7 +365,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 4, y = 0 },	
+	pos = { x = 4, y = 2 },	
 
 	use = function(self, card, area, copier)
 		G.E_MANAGER:add_event(Event({
@@ -454,7 +454,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 5, y = 0 },	
+	pos = { x = 5, y = 2 },	
 
 	
 	use = function(self, card, area, copier)
@@ -487,7 +487,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 0, y = 1 },	
+	pos = { x = 0, y = 3 },	
 
 	
 	use = function(self, card, area, copier)
@@ -509,7 +509,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 1, y = 1 },	
+	pos = { x = 1, y = 3 },	
 
 	
 	use = function(self, card, area, copier)
@@ -531,7 +531,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 2, y = 1 },	
+	pos = { x = 2, y = 3 },	
 
 	
 	can_use = function(self, card)
@@ -549,7 +549,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 3, y = 1 },	
+	pos = { x = 3, y = 3 },	
 
 	
 	can_use = function(self, card)
@@ -563,7 +563,7 @@ SMODS.Consumable {
 	config = { max_highlighted = 1, min_highlighted = 1 },
 	
 	atlas = 'items',
-	pos = { x = 4, y = 1 },	
+	pos = { x = 4, y = 3 },	
 
 	
 	use = function(self, card, area, copier)
@@ -591,7 +591,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 5, y = 1 },	
+	pos = { x = 5, y = 3 },	
 
 	
 	use = function(self, card, area, copier)
@@ -629,7 +629,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 0, y = 2 },	
+	pos = { x = 0, y = 4 },	
 
 	
 	use = function(self, card, area, copier)
@@ -681,7 +681,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 1, y = 2 },	
+	pos = { x = 1, y = 4 },	
 	
 	can_use = function(self, card)
 		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
@@ -695,7 +695,7 @@ SMODS.Consumable {
 	config = { max_highlighted = 1, min_highlighted = 1 },
 	
 	atlas = 'items',
-	pos = { x = 2, y = 2 },	
+	pos = { x = 2, y = 4},	
 
 	
 	use = function(self, card, area, copier)
@@ -734,7 +734,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 3, y = 2 },	
+	pos = { x = 3, y = 4 },	
 	
 	can_use = function(self, card)
 		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
@@ -750,7 +750,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 4, y = 2 },	
+	pos = { x = 0, y = 0 },	
 	
 	use = function(self, card, area, copier)
 		return { message = "Sip..." }
@@ -766,7 +766,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 5, y = 2 },	
+	pos = { x = 1, y = 0 },	
 	
 	use = function(self, card, area, copier)
 		return { message = "Nom..." }
@@ -782,7 +782,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 0, y = 3 },	
+	pos = { x = 2, y = 0 },	
 	
 	use = function(self, card, area, copier)
 		return { message = "Nom..." }
@@ -798,7 +798,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 1, y = 3 },	
+	pos = { x = 3, y = 0 },	
 	
 	use = function(self, card, area, copier)
 		return { message = "Nom..." }
@@ -814,7 +814,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 2, y = 3 },	
+	pos = { x = 4, y = 0 },	
 	
 	use = function(self, card, area, copier)
 		local probability = pseudorandom('caramel' .. G.GAME.round_resets.ante)
@@ -858,7 +858,7 @@ SMODS.Consumable {
 	end,
 	
 	atlas = 'items',
-	pos = { x = 3, y = 3 },	
+	pos = { x = 5, y = 0 },	
 	
 	use = function(self, card, area, copier)
 		local oldBlind = G.GAME.blind.chips
@@ -891,7 +891,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 4, y = 3 },	
+	pos = { x = 0, y = 1 },	
 	
 	use = function(self, card, area, copier)
 		local probability = pseudorandom('dough' .. G.GAME.round_resets.ante)
@@ -931,7 +931,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 5, y = 3 },	
+	pos = { x = 1, y = 1 },	
 	
 	use = function(self, card, area, copier)
 		return { message = "Nom..." }
@@ -947,7 +947,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 0, y = 4 },	
+	pos = { x = 2, y = 1 },	
 	
 	use = function(self, card, area, copier)
 		local probability = pseudorandom('ricotta' .. G.GAME.round_resets.ante)
@@ -989,7 +989,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 1, y = 4 },	
+	pos = { x = 3, y = 1 },	
 	
 	use = function(self, card, area, copier)
 		return { message = "Nom..." }
@@ -1005,7 +1005,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 2, y = 4 },	
+	pos = { x = 4, y = 1 },	
 	
 	can_use = function(self, card)
 		return false
@@ -1021,7 +1021,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 3, y = 4 },	
+	pos = { x = 5, y = 1 },	
 	
 	can_use = function(self, card)
 		return false
@@ -1037,7 +1037,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 4, y = 4 },	
+	pos = { x = 0, y = 2 },	
 	
 	can_use = function(self, card)
 		return false
@@ -1053,7 +1053,7 @@ SMODS.Consumable {
 	set = 'jojo_Scraps',
 	
 	atlas = 'items',
-	pos = { x = 5, y = 4 },	
+	pos = { x = 1, y = 2 },	
 	
 	can_use = function(self, card)
 		return false

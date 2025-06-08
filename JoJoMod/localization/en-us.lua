@@ -105,7 +105,9 @@ return {
 			j_jojo_stand_pearlJam = {
 				name = 'Pearl Jam',
 				text = {
-					"All bought food scraps get {C:attention}cooked"
+					"All bought food scraps get {C:attention}cooked",
+					"{C:inactive}(Currently {C:chips}+#1# {C:inactive}Chips, {C:mult}+#2# {C:inactive}Mult,",
+					"{X:mult,C:white}X#3#{C:inactive} Mult, and {X:green,C:white}X#4#{C:inactive} Speed)"
 				}
 			},
 			j_jojo_stand_heavensDoor = {
