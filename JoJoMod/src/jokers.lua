@@ -502,13 +502,13 @@ SMODS.Joker {
 			local key = context.consumeable.config.center.key
 			
 			if key == 'c_jojo_harlotSpaghetti' then
-				card.ability.extra.chips = card.ability.extra.chips + context.consumeable.config.extra.chips
+				card.ability.extra.chips = card.ability.extra.chips + context.consumeable.ability.extra.chips
 			elseif key == 'c_jojo_meatAppleSauce' then
-				card.ability.extra.mult = card.ability.extra.mult + context.consumeable.config.extra.mult
+				card.ability.extra.mult = card.ability.extra.mult + context.consumeable.ability.extra.mult
 			elseif key == 'c_jojo_carrozza' then
-				card.ability.extra.xmult = card.ability.extra.xmult + context.consumeable.config.extra.xmult
+				card.ability.extra.xmult = card.ability.extra.xmult + context.consumeable.ability.extra.xMult
 			elseif key == 'c_jojo_doppio' then
-				card.ability.extra.speed = card.ability.extra.speed + context.consumeable.config.extra.speed
+				card.ability.extra.speed = card.ability.extra.speed + context.consumeable.ability.extra.speed
 			end
 		end
 		if context.card_added and context.card.ability.consumeable then
