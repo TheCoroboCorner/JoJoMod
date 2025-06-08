@@ -551,13 +551,13 @@ SMODS.Joker {
 		if context.joker_main then
 			return { chips = card.ability.extra.chips, mult = card.ability.extra.mult, xmult = card.ability.extra.xmult }
 		end
-		if context.after and context.cardarea == G.play and not context.blueprint then
+		if context.after and not context.blueprint and (card.ability.extra.chips > 0 or card.ability.extra.mult > 0 or card.ability.extra.xmult > 0) then
 			card.ability.extra.chips = 0
 			card.ability.extra.mult = 0
 			card.ability.extra.xmult = 0
 			return { message = localize('k_reset') }
 		end
-		if context.end_of_round and context.game_over == false and context.main_eval and G.GAME.blind.boss then
+		if context.end_of_round and context.game_over == false and context.main_eval and G.GAME.blind.boss and card.ability.extra.speed > 0 then
 			card.ability.extra.speed = 0
 			return { message = localize('k_reset') }
 		end
