@@ -1,5 +1,5 @@
 [manifest]
-version = "0.9.1"
+version = "0.9.2"
 dump_lua = true
 priority = 0
 
@@ -20,22 +20,6 @@ target = '=[SMODS _ "src/game_object.lua"]'
 pattern = 'vars = { cfg.choose, cfg.extra },'
 position = "at"
 payload = 'vars = { math.min(cfg.choose + (G.GAME.choose_mod or 0), cfg.extra), cfg.extra },'
-match_indent = true
-times = 1
-
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = '''
-G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
-    play_sound('tarot2', 0.76, 0.4);return true end}))
-play_sound('tarot2', 1, 0.4)
-used_tarot:juice_up(0.3, 0.5)
-'''
-position = "after"
-payload = '''
-SMODS.calculate_context({failed_wheel = true})
-'''
 match_indent = true
 times = 1
 
@@ -71,6 +55,27 @@ if next(SMODS.find_card("j_jojo_requiem_goldExperience")) then
 else
     G.hand.highlighted[i].ability.discarded = true
     draw_card(G.hand, G.discard, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])
+end
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''
+if self.ability.consumeable.max_highlighted then
+    if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
+        return true
+    end
+end
+'''
+position = "before"
+payload = '''
+if self.ability.max_highlighted then
+    if self.ability.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.min_highlighted or 1) then
+        return true
+    end
 end
 '''
 match_indent = true

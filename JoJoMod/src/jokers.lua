@@ -7,7 +7,7 @@ end
 
 SMODS.Joker {
 	key = 'stand_starPlatinum',
-	config = {extra = {mult_added = 1, mult_mod = 0, time_chips = 0, time_mult = 0, 
+	config = {extra = {mult_added = 1, mult_mod = 0, chips = 0, mult = 0, 
 	descP1 = 'This Stand appears to have more', descP2 = 'potential hidden deep within...'}},
 	
 	atlas = "stands",
@@ -15,7 +15,7 @@ SMODS.Joker {
 	
 	loc_vars = function(self, info_queue, card)
 		return {vars = {card.ability.extra.mult_added, card.ability.extra.mult_mod,
-		card.ability.extra.time_chips, card.ability.extra.time_mult,
+		card.ability.extra.chips, card.ability.extra.mult,
 		card.ability.extra.descP1, card.ability.extra.descP2,
 		card.ability.extra.speed_added, card.ability.extra.speed}}
 	end,
@@ -28,7 +28,7 @@ SMODS.Joker {
 	
 	calculate = function(self, card, context)		
 		if context.first_hand_drawn and next(SMODS.find_card("j_jojo_requiem_theWorld")) then
-			ease_hands_played(next(SMODS.find_card("j_jojo_requiem_theWorld")).ability.extra.hands)
+			ease_hands_played(SMODS.find_card("j_jojo_requiem_theWorld")[1].ability.extra.hands)
 		end
 	
 		-- Used to handle the interaction between The World and Star Platinum
@@ -44,10 +44,10 @@ SMODS.Joker {
 		end
 		
 		-- Used to handle the time stop mechanic
-		if context.modify_hand and not context.blueprint then
-			if next(SMODS.find_card("j_jojo_stand_theWorld")) then -- This happens when The World is owned
-				hand_chips = hand_chips + card.ability.extra.time_chips
-				mult = mult + card.ability.extra.time_mult
+		if context.modify_hand then
+			if next(SMODS.find_card("j_jojo_stand_theWorld")) or next(SMODS.find_card("j_jojo_requiem_theWorld")) then -- This happens when The World is owned
+				hand_chips = hand_chips + card.ability.extra.chips
+				mult = mult + card.ability.extra.mult
 			
 				return {message = 'Tick...', colour = G.C.GOLD}
 			end -- End section
@@ -68,22 +68,27 @@ SMODS.Joker {
 					break
 				end
 			end
-			if bonus then
+			if bonus and not context.blueprint then
 				card.ability.extra.mult_mod = card.ability.extra.mult_mod + card.ability.extra.mult_added
 				l_mult_mod = card.ability.extra.mult_mod
 				l_message = localize('k_upgrade_ex')
 				l_colour = G.C.MULT
-			else
+			elseif not context.blueprint then
+				card.ability.extra.mult_mod = 0
+				l_mult_mod = card.ability.extra.mult_mod
+				l_message = localize('k_reset')
+				l_colour = G.C.MULT
+			elseif context.blueprint then
 				l_mult_mod = card.ability.extra.mult_mod
 				l_message = localize {type = 'variable', key = 'a_mult', vars = {card.ability.extra.mult_mod}}
 				l_colour = G.C.MULT
 			end
 			-- End section
 			
-			if next(SMODS.find_card("j_jojo_stand_theWorld")) and not context.blueprint
+			if next(SMODS.find_card("j_jojo_stand_theWorld")) or next(SMODS.find_card("j_jojo_requiem_theWorld")) and not context.blueprint
 			and (G.GAME.current_round.hands_left == 0 or G.GAME.current_round.discards_used > 0) then -- This happens when The World is owned, with one hand left or one discard used
-				card.ability.extra.time_chips = 0
-				card.ability.extra.time_mult = 0
+				card.ability.extra.chips = 0
+				card.ability.extra.mult = 0
 			end -- End section
 			
 			-- This happens when The World Over Heaven is owned
@@ -94,10 +99,29 @@ SMODS.Joker {
 		end
 		
 		if context.final_scoring_step and not context.blueprint then
-			if next(SMODS.find_card("j_jojo_stand_theWorld")) then
+			if next(SMODS.find_card("j_jojo_stand_theWorld")) or next(SMODS.find_card("j_jojo_requiem_theWorld")) then
 				if (G.GAME.current_round.hands_left > 0 and G.GAME.current_round.discards_used == 0) then
-					card.ability.extra.time_chips = hand_chips --+ card.ability.extra.chips
-					card.ability.extra.time_mult = mult --+ card.ability.extra.mult
+					local my_pos = nil
+					for i = 1, #G.jokers.cards do
+						if G.jokers.cards[i] == card then
+							my_pos = i
+							break
+						end
+					end
+					
+					if hand_chips ~= 0 or mult ~= 0 then
+						card.ability.extra.chips = hand_chips
+						card.ability.extra.mult = mult
+					elseif my_pos and my_pos ~= 1 then
+						for i = 1, my_pos - 1 do
+							local key = G.jokers.cards[i].config.center.key
+							if key == 'j_jojo_stand_theWorld' or key == 'j_jojo_stand_starPlatinum' or key == 'j_jojo_requiem_theWorld' then
+								card.ability.extra.chips = G.jokers.cards[i].ability.extra.chips
+								card.ability.extra.mult = G.jokers.cards[i].ability.extra.mult
+								break
+							end
+						end
+					end
 			
 					hand_chips = 0
 					mult = 0
@@ -221,15 +245,34 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 		if (G.GAME.current_round.hands_left > 0 and G.GAME.current_round.discards_used == 0)
 		and (context.final_scoring_step) and not context.blueprint then
-			card.ability.extra.chips = hand_chips
-			card.ability.extra.mult = mult
+			local my_pos = nil
+			for i = 1, #G.jokers.cards do
+				if G.jokers.cards[i] == card then
+					my_pos = i
+					break
+				end
+			end
+			
+			if hand_chips ~= 0 or mult ~= 0 then
+				card.ability.extra.chips = hand_chips
+				card.ability.extra.mult = mult
+			elseif my_pos and my_pos ~= 1 then
+				for i = 1, my_pos - 1 do
+					local key = G.jokers.cards[i].config.center.key
+					if key == 'j_jojo_stand_theWorld' or key == 'j_jojo_stand_starPlatinum' or key == 'j_jojo_requiem_theWorld' then
+						card.ability.extra.chips = G.jokers.cards[i].ability.extra.chips
+						card.ability.extra.mult = G.jokers.cards[i].ability.extra.mult
+						break
+					end
+				end
+			end
 			
 			hand_chips = 0
 			mult = 0
 			
 			return {message = 'Tick...', colour = G.C.GOLD}
 		end
-		if context.modify_hand and not context.blueprint then
+		if context.modify_hand then
 			hand_chips = hand_chips + card.ability.extra.chips
 			mult = mult + card.ability.extra.mult
 			
@@ -554,11 +597,11 @@ SMODS.Joker {
 		if context.after and not context.blueprint and not context.retrigger_joker and (card.ability.extra.chips > 0 or card.ability.extra.mult > 0 or card.ability.extra.xmult > 0) then
 			card.ability.extra.chips = 0
 			card.ability.extra.mult = 0
-			card.ability.extra.xmult = 0
+			card.ability.extra.xmult = 1
 			return { message = localize('k_reset') }
 		end
 		if context.end_of_round and not context.blueprint and not context.retrigger_joker and context.game_over == false and context.main_eval and G.GAME.blind.boss and card.ability.extra.speed > 0 then
-			card.ability.extra.speed = 0
+			card.ability.extra.speed = 1
 			return { message = localize('k_reset') }
 		end
 	end
@@ -574,14 +617,21 @@ SMODS.Joker {
 	pos = { x = 0, y = 6 },
 	
 	calculate = function(self, card, context)
-		if context.card_added and context.card.ability.extra then
-			for key, entry in pairs(context.card.ability.extra) do
-				if type(entry) == "number" then
-					context.card.ability.extra[key] = 2 * entry
-				elseif type(entry) == "table" then
-					for subkey, subval in pairs(entry) do
-						if type(subval) == "number" then
-							entry[subkey] = 2 * subval
+		if context.card_added and context.card.ability.consumeable then
+			if type(context.card.ability) == "table" then
+				for key, entry in pairs(context.card.ability) do
+					if type(entry) == "number" then
+						context.card.ability[key] = 2 * entry
+					end
+				end
+			elseif type(context.card.ability) == "number" then
+				context.card.ability = context.card.ability * 2
+			end
+			if context.card.ability.extra then
+				if type(context.card.ability.extra) == "table" then
+					for key, entry in pairs(context.card.ability.extra) do
+						if type(entry) == "number" then
+							context.card.ability.extra[key] = 2 * entry
 						end
 					end
 				end
@@ -1319,7 +1369,16 @@ SMODS.Joker {
 			local valid_cards = {}
 			for _, card in ipairs(G.playing_cards) do
 				if not SMODS.has_no_suit(card) and not SMODS.has_no_rank(card) then
-					valid_cards[#valid_cards + 1] = card
+					local rankNotInValidCards = true
+					for i, v in ipairs(valid_cards) do
+						if v.base.value == card.base.value then
+							rankNotInValidCards = false
+						end
+					end
+					
+					if rankNotInValidCards then
+						valid_cards[#valid_cards + 1] = card
+					end
 				end
 			end
 			
@@ -1331,6 +1390,8 @@ SMODS.Joker {
 			local unlucky_card = pseudorandom_element(valid_cards, pseudoseed('dragonsDreamUnlucky' .. G.GAME.round_resets.ante))
 			if unlucky_card then
 				card.ability.extra.unluckyHand = unlucky_card.base.value
+			else
+				card.ability.extra.unluckyHand = card.ability.extra.luckyHand
 			end
 		end
 	end,
@@ -1635,15 +1696,34 @@ SMODS.Joker {
 		end
 		if (G.GAME.current_round.hands_left > 0 and G.GAME.current_round.discards_used == 0)
 		and (context.final_scoring_step) and not context.blueprint then
-			card.ability.extra.chips = hand_chips
-			card.ability.extra.mult = mult
+			local my_pos = nil
+			for i = 1, #G.jokers.cards do
+				if G.jokers.cards[i] == card then
+					my_pos = i
+					break
+				end
+			end
+			
+			if hand_chips ~= 0 or mult ~= 0 then
+				card.ability.extra.chips = hand_chips
+				card.ability.extra.mult = mult
+			elseif my_pos and my_pos ~= 1 then
+				for i = 1, my_pos - 1 do
+					local key = G.jokers.cards[i].config.center.key
+					if key == 'j_jojo_stand_theWorld' or key == 'j_jojo_stand_starPlatinum' or key == 'j_jojo_requiem_theWorld' then
+						card.ability.extra.chips = G.jokers.cards[i].ability.extra.chips
+						card.ability.extra.mult = G.jokers.cards[i].ability.extra.mult
+						break
+					end
+				end
+			end
 			
 			hand_chips = 0
 			mult = 0
 			
 			return {message = 'Tick...', colour = G.C.GOLD}
 		end
-		if context.modify_hand and not context.blueprint then
+		if context.modify_hand then
 			hand_chips = hand_chips + card.ability.extra.chips
 			mult = mult + card.ability.extra.mult
 			
