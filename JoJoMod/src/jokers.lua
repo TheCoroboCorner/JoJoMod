@@ -392,7 +392,7 @@ SMODS.Joker {
 			end
 		end
 		
-		if context.after and context.cardarea == G.play and not context.blueprint then
+		if context.after and not context.blueprint then
 			local _hands = {}
 			for k, v in pairs(G.GAME.hands) do
 				if v.visible and k ~= card.ability.extra.hand then
