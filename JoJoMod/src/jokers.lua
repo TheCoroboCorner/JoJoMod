@@ -33,7 +33,11 @@ SMODS.Joker {
 	
 		-- Used to handle the interaction between The World and Star Platinum
 		if context.ending_shop and not context.blueprint then
-			if next(SMODS.find_card("j_jojo_stand_theWorld")) then
+			if next(SMODS.find_card("j_jojo_requiem_theWorld")) then
+				card.ability.extra.descP1 = '\"So, The World Over Heaven is the same type'
+				card.ability.extra.descP2 = 'of Stand as Star Platinum...\"'
+				return {message = 'So, it\'s the same type of Stand as Star Platinum...', colour = G.C.DARK_EDITION}
+			elseif next(SMODS.find_card("j_jojo_stand_theWorld")) then
 				card.ability.extra.descP1 = '\"So, The World is the same type'
 				card.ability.extra.descP2 = 'of Stand as Star Platinum...\"'
 				return {message = 'So, it\'s the same type of Stand as Star Platinum...', colour = G.C.DARK_EDITION}
@@ -892,7 +896,10 @@ SMODS.Joker {
 		end
 		if context.destroy_card and not context.blueprint then
 			if #context.full_hand == 1 and context.destroy_card == context.full_hand[1] and G.GAME.current_round.hands_played == 0 then
-				return { remove = true }
+				return {
+					dollars = card.ability.extra.reward,
+					remove = true 
+				}
 			end
 		end
 	end

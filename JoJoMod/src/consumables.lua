@@ -496,6 +496,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return G.GAME.blind.in_blind
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -518,6 +522,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return G.GAME.blind.in_blind
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -536,6 +544,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -553,6 +565,10 @@ SMODS.Consumable {
 
 	
 	can_use = function(self, card)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
+	end,
+	
+	in_pool = function(self, args)
 		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
@@ -579,6 +595,10 @@ SMODS.Consumable {
 		else
 			selectedCard:set_edition("e_negative")
 		end
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -617,6 +637,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return G.GAME.blind.in_blind
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -668,6 +692,10 @@ SMODS.Consumable {
 	
 	keep_on_use = function(self, card)
 		return card.ability.extra.useCount + 1 < card.ability.extra.maxUseCount
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -684,6 +712,10 @@ SMODS.Consumable {
 	pos = { x = 1, y = 4 },	
 	
 	can_use = function(self, card)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
+	end,
+	
+	in_pool = function(self, args)
 		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
@@ -721,6 +753,10 @@ SMODS.Consumable {
 			end
 		end
 		return false
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -737,6 +773,10 @@ SMODS.Consumable {
 	pos = { x = 3, y = 4 },	
 	
 	can_use = function(self, card)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
+	end,
+	
+	in_pool = function(self, args)
 		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
@@ -758,6 +798,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return true
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -774,6 +818,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return true
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -790,6 +838,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return true
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -806,6 +858,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return true
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -939,6 +995,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return true
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -997,6 +1057,10 @@ SMODS.Consumable {
 	
 	can_use = function(self, card)
 		return true
+	end,
+	
+	in_pool = function(self, args)
+		return next(SMODS.find_card("j_jojo_stand_pearlJam"))
 	end
 }
 
@@ -1013,6 +1077,10 @@ SMODS.Consumable {
 	
 	add_to_deck = function(self, card, from_debuff)
 		card.sell_cost = 2
+	end,
+	
+	in_pool = function(self, args)
+		return args.source == 'jojo_stand_harvest'
 	end
 }
 
@@ -1029,6 +1097,10 @@ SMODS.Consumable {
 	
 	add_to_deck = function(self, card, from_debuff)
 		card.sell_cost = 1
+	end,
+	
+	in_pool = function(self, args)
+		return args.source == 'jojo_stand_harvest'
 	end
 }
 
@@ -1045,6 +1117,10 @@ SMODS.Consumable {
 	
 	add_to_deck = function(self, card, from_debuff)
 		card.sell_cost = 3
+	end,
+	
+	in_pool = function(self, args)
+		return args.source == 'jojo_stand_harvest'
 	end
 }
 
@@ -1061,6 +1137,10 @@ SMODS.Consumable {
 	
 	add_to_deck = function(self, card, from_debuff)
 		card.sell_cost = 10
+	end,
+	
+	in_pool = function(self, args)
+		return args.source == 'jojo_stand_harvest'
 	end
 }
 
