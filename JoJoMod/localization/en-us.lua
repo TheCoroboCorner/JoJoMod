@@ -1,5 +1,32 @@
 return {
 	descriptions = {
+		Back = {
+			b_jojo_speed = {
+				name = "Speed Deck",
+				text = {
+					"Start run with a {C:attention}Blueprint{},",
+					"{C:attention}Moody Blues{}, and two {C:attention}Made In Heavens{},",
+					"all {C:blue}Foil{} and {C:purple}Eternal"
+				}
+			},
+			b_jojo_queensDream = {
+				name = "Queen's Dream Deck",
+				text = {
+					"Start run with {C:attention}Kira{}'s",
+					"stands, as well as {C:attention}Harvest,",
+					"{C:attention}Stray Cat{}, and {C:attention}Soft & Wet,",
+					"all {C:purple}Eternal"
+				}
+			},
+			b_jojo_bucciarati = {
+				name = "Mazzo Guardie del corpo",
+				text = {
+					"Start run with all of",
+					"{C:attention}Bucciarati{}'s teammates",
+					"{C:inactive}(Except Narancia)"
+				}
+			}
+		},
 		Joker = {
 			-- Normal Stand Jokers
 			j_jojo_stand_starPlatinum = {
@@ -137,8 +164,7 @@ return {
 				name = 'Stray Cat',
 				text = {
 					"When a card is sold, {C:attention}charges up an attack{}.",
-					"When next hand is played, attacks and destroys one",
-					"random card in hand. Can stockpile up to {C:attention}three{} attacks",
+					"Can stockpile up to {C:attention}three{} attacks",
 					"{C:inactive}(Currently {C:attention}#1# {C:inactive}attacks stockpiled)"
 				}
 			},
@@ -299,7 +325,6 @@ return {
 				text = {
 					"{C:blue}+#1#{} hands, played cards are {C:attention}shuffled",
 					"{C:attention}back into the deck",
-					"{C:inactive}Retains previous abilities",
 					"{C:inactive}(Currently{} {C:chips}+#2#{} {C:inactive}Chips and{} {C:mult}+#3#{} {C:inactive}Mult)"
 					
 				}
@@ -310,7 +335,6 @@ return {
 					"If a {C:blue}hand{} or {C:red}discard{} destroys",
 					"a card, it does not cost a {C:blue}hand{} or",
 					"{C:red}discard{} to play",
-					"{C:inactive}Retains previous abilities"
 				}
 			},
 			j_jojo_requiem_goldExperience = {
@@ -318,14 +342,12 @@ return {
 				text = {
 					"{C:red}+#1#{} discards, discards are {C:attention}shuffled",
 					"{C:attention}back into the deck",
-					"{C:inactive}Retains previous abilities"
 				}
 			},
 			j_jojo_requiem_cmoon = {
 				name = 'C-Moon',
 				text = {
 					"Copies ability of adjacent {C:attention}Jokers",
-					"{C:inactive}Retains previous multipliers",
 					"{C:inactive}(Currently {C:chips}+#1# {C:inactive}Chips, {C:mult}+#2# {C:inactive}Mult,",
 					"{C:inactive}and {X:mult,C:white}X#3#{C:inactive} Mult)"
 				}
@@ -334,8 +356,6 @@ return {
 				name = 'Made In Heaven',
 				text = { -- Note to self - Update this to have a tag for skip tags
 					"{X:green,C:white}X#5#{} Speed when Blind is selected",
-					"{C:inactive}(Every 1x Speed is one trigger)",
-					"{C:inactive}Retains previous abilities and multipliers",
 					"{C:inactive}(Currently {C:chips}+#1# {C:inactive}Chips, {C:mult}+#2# {C:inactive}Mult,",
 					"{X:mult,C:white}X#3#{C:inactive} Mult, and {X:green,C:white}X#4#{C:inactive} Speed)"
 				}
@@ -347,7 +367,6 @@ return {
 					"{C:attention}two Jokers{} and can {C:attention}upgrade",
 					"Jokers with editions",
 					"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)",
-					"{C:inactive}Retains previous abilities"
 				}
 			},
 			j_jojo_requiem_tuskAct3 = {
@@ -355,7 +374,6 @@ return {
 				text = {
 					"{C:tarot,T:c_wheel_of_fortune}Wheel of Fortune{} can make Jokers {C:attention,T:e_negative}negative",
 					"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)",
-					"{C:inactive}Retains previous abilities"
 				}
 			},
 			j_jojo_requiem_tuskAct4 = {
@@ -364,7 +382,6 @@ return {
 					"{C:tarot,T:c_wheel_of_fortune}Wheel of Fortune{} now affects up to",
 					"{C:attention}three Jokers{}, {X:chips,C:white}X#1#{} Chips per negative Joker",
 					"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)",
-					"{C:inactive}Retains previous abilities"
 				}
 			},
 			j_jojo_requiem_softAndWet = {
@@ -386,8 +403,8 @@ return {
 			c_jojo_bubble = {
 				name = "Bubble",
 				text = {
-					"Select {C:attention}#1#{} cards,",
-					"copy the {C:attention}right{} card's enhancement",
+					"Select {C:attention}#1#{} cards, copy",
+					"the {C:attention}right{} card's enhancement",
 					"onto the {C:attention}left{} card",
 					"{C:inactive}(Drag to rearrange)"
 				}
@@ -614,6 +631,105 @@ return {
 					"{C:attention}Duplicates{} the card;",
 					"{C:attention}destroyed{} at the end",
 					"of round"
+				}
+			},
+			jojo_stoppedTime = {
+				name = "Stopped Time",
+				text = {
+					"{C:chips}Chips{} and {C:mult}Mult{} achieved during stopped",
+					"time {C:attention}stack up{} instead of scoring"
+				}
+			},
+			speed = {
+				name = "Speed",
+				text = {
+					"Every {X:green,C:white}X1{} Speed",
+					"obtained is one",
+					"{C:attention}trigger"
+				}
+			},
+			jojo_stand_strayCat_attack = {
+				name = "Bubble Attack",
+				text = {
+					"When next hand is",
+					"played, {C:attention}attacks{} and",
+					"{C:attention}destroys{} one random",
+					"card not in played hand"
+				}
+			},
+			jojo_requiem = {
+				name = "Requiem Joker",
+				text = {
+					"A Joker only attained by",
+					"{C:legendary}ascension{} through use of a",
+					"{C:attention}legendary artifact{}. Few can",
+					"ascend, but the ones who do",
+					"gain {C:legendary}ultimate power{}."
+				}
+			},
+			jojo_requiem_theWorld_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the ability",
+					"of {C:attention}The World"
+				}
+			},
+			jojo_requiem_killerQueen_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the ability",
+					"of {C:attention}Killer Queen"
+				}
+			},
+			jojo_requiem_goldExperience_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the ability",
+					"of {C:attention}Gold Experience"
+				}
+			},
+			jojo_requiem_cmoon_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the stats that",
+					"{C:attention}Whitesnake{} had built up"
+				}
+			},
+			jojo_requiem_madeInHeaven_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the ability",
+					"of {C:attention}C-Moon",
+					"and the stats that",
+					"{C:attention}Whitesnake{} had built up"
+				}
+			},
+			jojo_requiem_tuskAct2_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the ability",
+					"of {C:attention}Tusk ACT1"
+				}
+			},
+			jojo_requiem_tuskAct3_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the abilities of",
+					"previous {C:attention}Tusk{} stages"
+				}
+			},
+			jojo_requiem_tuskAct4_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the abilities of",
+					"previous {C:attention}Tusk{} stages"
+				}
+			},
+			jojo_requiem_softAndWet_ability = {
+				name = "Requiem",
+				text = {
+					"Retains the ability",
+					"of {C:attention}Soft & Wet"
 				}
 			}
 		}

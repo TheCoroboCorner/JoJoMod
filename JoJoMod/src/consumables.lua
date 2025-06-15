@@ -210,12 +210,15 @@ SMODS.Consumable {
 		end
 		if key == 'j_jojo_stand_tuskAct1' then
 			SMODS.add_card({ key = 'j_jojo_requiem_tuskAct2', edition = blackSabbathBoost })
+			stand.ability.extra.totalXmult = G.jokers.highlighted[1].ability.extra.totalXmult
 		end
 		if key == 'j_jojo_requiem_tuskAct2' then
 			SMODS.add_card({ key = 'j_jojo_requiem_tuskAct3', edition = blackSabbathBoost })
+			stand.ability.extra.totalXmult = G.jokers.highlighted[1].ability.extra.totalXmult
 		end
 		if key == 'j_jojo_requiem_tuskAct3' then
 			SMODS.add_card({ key = 'j_jojo_requiem_tuskAct4', edition = blackSabbathBoost })
+			stand.ability.extra.totalXmult = G.jokers.highlighted[1].ability.extra.totalXmult
 		end
 		if key == 'j_jojo_stand_softAndWet' then
 			SMODS.add_card({ key = 'j_jojo_requiem_softAndWet', edition = blackSabbathBoost })

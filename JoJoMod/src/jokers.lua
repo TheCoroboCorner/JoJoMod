@@ -243,6 +243,7 @@ SMODS.Joker {
 	pos = { x = 4, y = 0 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_stoppedTime", set = "Other"}
 		return {vars = {card.ability.extra.chips, card.ability.extra.mult}}
 	end,
 	
@@ -303,6 +304,8 @@ SMODS.Joker {
 	pos = { x = 5, y = 0 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.m_glass
+		info_queue[#info_queue + 1] = G.P_CENTERS.m_jojo_frozen
 		return { vars = { card.ability.extra.bonusChipsGlass, card.ability.extra.bonusChipsFrozen } }
 	end,
 	calculate = function(self, card, context)
@@ -535,6 +538,7 @@ SMODS.Joker {
 	pos = { x = 3, y = 1 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "speed", set = "Other"}
 		return { vars = { card.ability.extra.chips, card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.speed } }
 	end,
 	calculate = function(self, card, context)
@@ -756,6 +760,11 @@ SMODS.Joker {
 	atlas = "stands",
 	pos = { x = 5, y = 1 },
 	
+	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_jojo_standArrow
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
+	end,
+	
 	calculate = function(self, card, context)
 		if context.consumeable and not context.blueprint then
 			if context.consumeable.config.center.key == "c_jojo_standArrow" then
@@ -787,6 +796,7 @@ SMODS.Joker {
 	pos = { x = 6, y = 1 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_stand_strayCat_attack", set = "Other"}
 		return { vars = { card.ability.extra.readyToShoot } }
 	end,
 	calculate = function(self, card, context)
@@ -976,6 +986,12 @@ SMODS.Joker {
 	
 	atlas = "stands",
 	pos = { x = 2, y = 2 },
+	
+	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_jojo_standArrow
+		info_queue[#info_queue + 1] = {key = "jojo_requiem", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
+	end
 }
 
 SMODS.Joker {
@@ -1038,6 +1054,8 @@ SMODS.Joker {
 	pos = { x = 4, y = 2 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_jojo_bullet
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
 		return {vars = {card.ability.extra.bulletCount}}
 	end,
 	
@@ -1183,6 +1201,7 @@ SMODS.Joker {
 	pos = { x = 7, y = 2 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.m_jojo_frozen
 		return { vars = { card.ability.extra.ageUpAmount } }
 	end,
 	calculate = function(self, card, context)
@@ -1262,6 +1281,10 @@ SMODS.Joker {
 	atlas = "stands",
 	pos = { x = 8, y = 2 },
 	
+	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.m_jojo_frozen
+	end,
+	
 	calculate = function(self, card, context)
 		if context.before and context.main_eval then
 			local randomCard = pseudorandom_element(context.scoring_hand, pseudoseed('whiteAlbum' .. G.GAME.round_resets.ante))
@@ -1282,6 +1305,7 @@ SMODS.Joker {
 	pos = { x = 0, y = 3 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_jojo_kiss
 		return { vars = { G.GAME.probabilities.normal, card.ability.extra.odds } }
 	end,
 	calculate = function(self, card, context)
@@ -1436,6 +1460,7 @@ SMODS.Joker {
 	pos = { x = 3, y = 3 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_wheel_of_fortune
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
 	end,
 	
@@ -1461,7 +1486,8 @@ SMODS.Joker {
 	pos = { x = 4, y = 3 },
 	
 	loc_vars = function(self, info_queue, card)
-		return {}
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_jojo_bubble
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
 	end,
 	
 	calculate = function(self, card, context)
@@ -1694,6 +1720,8 @@ SMODS.Joker {
 	soul_pos = { x = 1, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_theWorld_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.j_jojo_stand_theWorld
 		return {vars = {card.ability.extra.hands, card.ability.extra.chips, card.ability.extra.mult}}
 	end,
 	
@@ -1758,6 +1786,8 @@ SMODS.Joker {
 	soul_pos = { x = 3, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_killerQueen_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.j_jojo_stand_killerQueen
 		return {vars = {card.ability.extra.reward}}
 	end,
 	
@@ -1795,6 +1825,8 @@ SMODS.Joker {
 	soul_pos = { x = 5, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_goldExperience_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.j_jojo_stand_goldExperience
 		return {vars = {card.ability.extra.discards}}
 	end,
 	
@@ -1837,6 +1869,8 @@ SMODS.Joker {
 	soul_pos = { x = 7, y = 4 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_cmoon_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.j_jojo_stand_whitesnake
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult}}
 	end,
 	
@@ -1885,6 +1919,8 @@ SMODS.Joker {
 	soul_pos = { x = 0, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_madeInHeaven_ability", set = "Other"}
+		info_queue[#info_queue + 1] = {key = "speed", set = "Other"}
 		return {vars = {card.ability.extra.chips, card.ability.extra.plusmult, card.ability.extra.timesmult, card.ability.extra.timesspeed, card.ability.extra.speedincrement}}
 	end,
 	
@@ -1937,6 +1973,8 @@ SMODS.Joker {
 	soul_pos = { x = 2, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_tuskAct2_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.j_jojo_stand_tuskAct1
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
 	end,
 	
@@ -1963,6 +2001,8 @@ SMODS.Joker {
 	soul_pos = { x = 4, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_tuskAct3_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
 		return {vars = {card.ability.extra.incrXmult, card.ability.extra.totalXmult}}
 	end,
 	
@@ -1989,6 +2029,8 @@ SMODS.Joker {
 	soul_pos = { x = 6, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_tuskAct4_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
 		return {vars = {card.ability.extra.negativeBonus, card.ability.extra.totalXmult}}
 	end,
 	
@@ -2020,7 +2062,9 @@ SMODS.Joker {
 	soul_pos = { x = 8, y = 5 },
 	
 	loc_vars = function(self, info_queue, card)
-		return {vars = {}}
+		info_queue[#info_queue + 1] = {key = "jojo_requiem_softAndWet_ability", set = "Other"}
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_jojo_spinningBubble
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_negative
 	end,
 	
 	calculate = function(self, card, context)
