@@ -68,9 +68,7 @@ return {
 				text = {
 					"{C:gold, E:1, s:1.2}Stops time{} until first",
 					"discard or last hand",
-					"{C:inactive}(Currently{} {C:chips}+#1#{} {C:inactive}Chips and{} {C:mult}+#2#{} {C:inactive}Mult)",
-					"{C:inactive}(Chips and Mult achieved during stopped",
-					"{C:inactive}time stack up instead of scoring)"
+					"{C:inactive}(Currently{} {C:chips}+#1#{} {C:inactive}Chips and{} {C:mult}+#2#{} {C:inactive}Mult)"
 				}
 			},
 			j_jojo_stand_hangedMan = {
