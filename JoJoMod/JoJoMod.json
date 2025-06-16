@@ -12,5 +12,7 @@
 	"conflicts": [
 		"incantation"
 	],
-	"version": "0.9.3a"
+	"version": "0.9.3b",
+	"git_owner": "TheCoroboCorner",
+	"git_repo": "JoJoMod"
 }

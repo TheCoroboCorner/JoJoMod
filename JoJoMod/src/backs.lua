@@ -1,6 +1,9 @@
 SMODS.Back {
 	key = "speed",
-	pos = { x = 1, y = 0 },
+	
+	atlas = 'decks',
+	pos = { x = 0, y = 0 },
+	
 	apply = function(self, back)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -33,7 +36,10 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "queensDream",
+	
+	atlas = 'decks',
 	pos = { x = 1, y = 0 },
+	
 	apply = function(self, back)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -66,7 +72,10 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "bucciarati",
-	pos = { x = 1, y = 0 },
+	
+	atlas = 'decks',
+	pos = { x = 2, y = 0 },
+	
 	apply = function(self, back)
 		G.E_MANAGER:add_event(Event({
 			func = function()	

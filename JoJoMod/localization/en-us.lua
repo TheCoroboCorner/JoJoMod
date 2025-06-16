@@ -19,7 +19,7 @@ return {
 				}
 			},
 			b_jojo_bucciarati = {
-				name = "Mazzo Guardie del corpo",
+				name = "Mazzo Guardie Del Corpo",
 				text = {
 					"Start run with all of",
 					"{C:attention}Bucciarati{}'s teammates",
