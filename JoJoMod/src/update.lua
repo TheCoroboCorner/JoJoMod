@@ -282,7 +282,9 @@ local function show_update_prompt(latest, current)
 end
 
 JOJO.update_check = function()
-	local git_version = check_version():match("^v?(%d+%.%d+%.%d+%a*)$")
+	local raw_version = check_version()
+	if not raw_version then return nil, "There appears to have been a connection error" end
+	local git_version = raw_version:match("^v?(%d+%.%d+%.%d+%a*)$")
 	local current_version = SMODS.Mods[id].version:match("^v?(%d+%.%d+%.%d+%a*)$")
 	if git_version and current_version and V(git_version) > V(current_version) then
 		show_update_prompt('v' .. git_version, 'v' .. current_version)
