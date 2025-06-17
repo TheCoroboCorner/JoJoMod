@@ -219,6 +219,7 @@ local function updateArgs()
 	
 	git_owner = current_mod.git_owner
 	git_repo = current_mod.git_repo
+	mod_index_id = current_mod.mod_index_id
 	mod_path = current_mod.mod_path
 	id = current_mod.id
 	subpath = current_mod.subpath
