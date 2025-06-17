@@ -13,6 +13,12 @@
 		"incantation"
 	],
 	"version": "0.9.3d",
+	
 	"git_owner": "TheCoroboCorner",
-	"git_repo": "JoJoMod"
+	"git_repo": "JoJoMod",
+	"mod_path": "Mods/JoJoMod",
+	"subpath": "JoJoMod",
+	"download_suffix": "Release.zip",
+	"update_mandatory": false,
+	"target_version": "-1"
 }

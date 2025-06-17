@@ -1,16 +1,29 @@
+local bit = require("bit")
 
                             -- PARAMETERS TO SET --
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local modPath = "Mods/JoJoMod" -- This is the path to your mod folder
+local git_owner = "TheCoroboCorner" -- This is the Github username to look up for the repository
+
+local git_repo = "JoJoMod" -- This is the name of the Github repository in question
+
+local mod_path = "Mods/JoJoMod" -- This is the path to your mod folder
 
 local id = "JoJoMod" -- This is the ID of your mod -- the same one you put in your metadata file
 
 local subpath = "JoJoMod" -- Some mods have additional folders for you to dig through once you open the zip.
-						  -- In this case, mine is named JoJoMod because I zip the folder instead of the contents.
-						  -- Put a value here if you have a similar thing for yours, but you can comment it out otherwise.
+-- OPTIONAL				  -- In this case, mine is named JoJoMod because I zip the folder instead of the contents.
 						  
 local download_suffix = "Release.zip" -- The file in question to download - commenting it out means you want the default file
+-- OPTIONAL
+
+local update_mandatory = false -- This is used in case a mandatory update is necessary for the mod to continue functioning (i.e. multiplayer mod)
+-- OPTIONAL
+
+local target_version = nil -- This is the version of the mod that's preferred -- no need to touch this, this is for modpacks to touch
+-- OPTIONAL
+
+-- Setting them here is no longer functional -- you set them directly in your metadata file instead. It just makes it easier.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -97,35 +110,37 @@ end
 --- in case no subdirectory was mentioned). 
 --- Linux is similar, except it has the functionality of the first few steps built-in, if I'm reading this right.
 local function unzip_file(zip_path)
-	modPath = modPath:gsub("/", "\\")
+	mod_path = mod_path:gsub("/", "\\")
 	zip_path = zip_path:gsub("/", "\\")
 
 	local is_windows = package.config:sub(1,1) == '\\'
-	local tmp_dir = modPath .. "_tmp"
+	local tmp_dir = mod_path .. "_tmp"
 	local ok1, ok2, ok3
 	
 	if is_windows then
 		os.execute(('if exist "%s" rmdir /S /Q "%s"'):format(tmp_dir, tmp_dir))
-		os.execute(('if exist "%s" rmdir /S /Q "%s"'):format(modPath, modPath))
+		os.execute(('if exist "%s" rmdir /S /Q "%s"'):format(mod_path, mod_path))
 		ok1 = os.execute(string.format('powershell -NoProfile -Command "Expand-Archive -LiteralPath %q -DestinationPath %q -Force"', zip_path, tmp_dir))
 		
 		local subfolder = get_subdir(tmp_dir)
-		if subfolder then
+		if subfolder and (ok1 == true or ok1 == 0) then
 			local src_path = subpath and tmp_dir .. "\\" .. subfolder .. "\\" .. subpath or tmp_dir .. "\\" .. subfolder
-			ok2 = os.execute(string.format('powershell -NoProfile -Command "Move-Item -Path %q -Destination %q -Force"', src_path, modPath))
+			ok2 = os.execute(string.format('powershell -NoProfile -Command "Move-Item -Path %q -Destination %q -Force"', src_path, mod_path))
 		else 
 			ok2 = false
 		end
 		
-		ok3 = os.execute(string.format('rmdir /S /Q "%s"', tmp_dir))
+		if (ok2 == true or ok2 == 0) then
+			ok3 = os.execute(string.format('rmdir /S /Q "%s"', tmp_dir))
+		end
 	else
-		ok1 = os.execute(string.format('unzip -o %q %q\'*\' -d %q', zip_path, subpath and string.format("%s-%s\\%s", repo, tag, subpath) or string.format("%s-%s", repo, tag), modPath))
+		ok1 = os.execute(string.format('unzip -o %q %q\'*\' -d %q', zip_path, subpath and string.format("%s-%s\\%s", repo, tag, subpath) or string.format("%s-%s", repo, tag), mod_path))
 		ok2 = true
 		ok3 = true
 	end
 	
 	local ok4 = os.remove(zip_path)
-	os.rename(string.sub(zip_path, -4), modPath:match("\\([^\\]+)$"))
+	os.rename(string.sub(zip_path, -4), mod_path:match("\\([^\\]+)$"))
 	
 	return  (ok1 == true or ok1 == 0) and
 			(ok2 == true or ok2 == 0) and
@@ -134,40 +149,63 @@ local function unzip_file(zip_path)
 	
 end
 
---- Downloads, unzips, and installs the latest update for the mod in question.
+--- Downloads the latest update for the mod in question.
 --- 	First, it locates your git_owner and git_repo parameters in your metadata file. These are
 --- your Github username and your Github repository name, respectively. Next, it gathers the tag and
 --- asset url, so it can install the correct update and the correct file for that update. Then, it
---- constructs the correct URL, attempts to download it using the download_file function, attempts to
---- unzip it using the unzip_file function, and if everything is successful, it restarts the game.
-local function install_update()
+--- constructs the correct URL and attempts to download it using the download_file function.
+local function download_update()
 	local owner, repo = SMODS.Mods[id].git_owner, SMODS.Mods[id].git_repo
-	local tag, asset_url, err = check_version()
-	if not tag then
-		print("Version check failed:", err)
-		return
+	if owner and repo then
+		local tag, asset_url, err = check_version()
+		if not tag then
+			print("Version check failed:", err)
+			return false, nil
+		end
+		
+		local zip_url = asset_url or string.format("https://github.com/%s/%s/archive/%s.zip", owner, repo, tag)
+		local zip_path = ("Mods\\%s-%s.zip"):format(repo, tag)
+		
+		if not download_file(zip_url, zip_path) then
+			print("Failed to download update from " ..zip_url)
+			return false, nil
+		end
+		
+		return true, zip_path
 	end
-	
-	local zip_url = asset_url or string.format("https://github.com/%s/%s/archive/%s.zip", owner, repo, tag)
-	local zip_path = ("Mods\\%s-%s.zip"):format(repo, tag)
-	
-	if not download_file(zip_url, zip_path) then
-		print("Failed to download update from " ..zip_url)
-		return
-	end
-	
+	return false, nil
+end
+
+--- Unzips and installs the latest update for the mod in question.
+--- 	Attempts to unzip it using the unzip_file function, placing a check on it otherwise.
+local function install_update(zip_path)
 	if not unzip_file(zip_path) then
 		print("Failed to unzip " ..zip_path)
-		return
+		return false
 	end
 	
-	SMODS.restart_game()
+	return true
+end
+
+--- Downloads, then installs the update.
+--- 	restart just depends on the scenario - an individual update might want restart to be enabled,
+--- but when it's in a bigger scheme, you might want to turn it off, just so you can retrigger it later.
+local function update_game(restart)
+	restart = restart or true
+	
+	local download_result, download_path = download_update()
+	if not download_result then return false end
+	if not install_update(download_path) then return false end
+	
+	if restart then SMODS.restart_game() end
+	
+	return true
 end
 
 --- Installs the update when the 'Yes' confirmation button is pressed in the update prompt screen.
 --- 	G.FUNCS.exit_overlay_menu() is there in case something goes wrong, so that it'll close anyway.
 G.FUNCS.update_accepted = function(e)
-	install_update()
+	update_game()
 	G.FUNCS.exit_overlay_menu()
 end
 
@@ -184,7 +222,7 @@ end
 --- After the text is instantiated, it moves onto the singular text node in question, then following with the
 --- buttons, and ending with the root node (It feels really messy to have all the nested tables in one place,
 --- so I did this). Finally, it overlays the menu on the screen.
-local function show_update_prompt(latest, current)
+local function show_update_prompt(latest, current, args)
 	local msg = {
 		("A new version of %s is available!\n"):format(SMODS.Mods[id].name),
 		("Installed: %s\n"):format(current),
@@ -289,20 +327,113 @@ local function show_update_prompt(latest, current)
 	}
 end
 
+--- Returns all active mods.
+--- 	While it does only get the active mods and not the inactive mods, it's not really necessary to get the
+--- inactive mods, as those can be updated when they're activated (and that saves the time of trying to do a
+--- web request for a mod that's going to be unused).
+local function get_all_local_mods()
+	local mods = {}
+	for key, _ in pairs(SMODS.Mods) do
+		mods[#mods + 1] = key
+	end
+	return mods
+end
+
+--- For each mod, it checks the response given by the update_check function and applies the appropriate flag.
+--- 	up_to_date means it is the latest version that can be found on the Github page,
+---		too_new means that the target version is an earlier version than the current version,
+---		too_old means that the target version is a later version than the current version,
+---		necessary means that the target version is a necessary version that can't be avoided,
+---		err means there was an error in the process, such as an incompatible mod or bad internet connection.
+---	You can parse an individual flag by just doing bit.band(mod_status[mod], flag) and it should work nicely.
+local function check_available_updates()
+	local mods = get_all_local_mods()
+	
+	-- Can't believe Lua doesn't have enums :<
+	local STATUS_FLAGS = {
+		up_to_date = 1,
+		too_new = 2,
+		too_old = 4,
+		necessary = 8,
+		err = 16
+	}
+	
+	local mod_status = {}
+	
+	for _, mod in ipairs(mods) do
+		local args = SMODS.Mods[mod]
+		local __, status_text = JOJO.update_check(args)
+		
+		if status_text == "Version up to date" or status_text == "Latest version too new" then
+			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.up_to_date)
+		end
+		
+		if status_text == "Version too new" or status_text == "Latest version too new" then
+			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.too_new)
+		end
+		
+		if status_text == "Version too old" then
+			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.too_old)
+		end
+		
+		if status_text == "There appears to have been a connection error" or status_text == "args not found" then
+			print("Connection error finding the mod details of " .. (SMODS.Mods[mod].name or "[name missing]"))
+			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.err)
+		end		
+		
+		if args.update_mandatory then
+			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.necessary)
+		end
+	end
+	
+	return mod_status
+end
+
 --- Compares the current version of the specified mod and the latest version on Github, sending the update prompt
---- if the current version is outdated.
+--- if the current version is outdated or too new for the modpack in question.
 --- 	The pattern matching essentially reduces the version type down to a "1.2.3" or "1.2.3a" type of deal. It'section
 --- a lot easier to compare that way (using V), and it even works for alpha/beta versions. Sometimes, if there are
 --- connection errors, check_version() will return nil, so there has to be a null check at the start there.
-JOJO.update_check = function()
-	local raw_version = check_version()
-	if not raw_version then return nil, "There appears to have been a connection error" end
+JOJO.update_check = function(args, prompt)
+	if not args then return false, "args not found" end
+	mod_path = args.mod_path
+	id = args.id
+	subpath = args.subpath
+	download_suffix = args.download_suffix
 	
-	local git_version = raw_version:match("^v?(%d+%.%d+%.%d+%a*)$")
+	local git_version = check_version()
+	if not git_version then return nil, "There appears to have been a connection error" end
 	
-	local current_version = SMODS.Mods[id].version:match("^v?(%d+%.%d+%.%d+%a*)$")
+	local latest_version = git_version:match("^v?(%d+%.%d+%.%d+%a*)$")
+	target_version = (not args.target_version or args.target_version == "-1") and latest_version or args.target_version
 	
-	if git_version and current_version and V(git_version) > V(current_version) then
-		show_update_prompt('v' .. git_version, 'v' .. current_version)
+	local current_version = args.version:match("^v?(%d+%.%d+%.%d+%a*)$")
+	
+	if target_version and current_version and V(target_version) > V(current_version) then
+		if prompt then
+			show_update_prompt('v' .. target_version, 'v' .. current_version, args)
+		end
+		return true, "Version too old"
+	elseif target_version and current_version and V(target_version) < V(current_version) then
+		if prompt then
+			show_update_prompt('v' .. target_version, 'v' .. current_version, args)
+		end
+		
+		if latest_version ~= target_version and V(latest_version) < V(current_version) then
+			return true, "Developer version, newer than newest version"
+		elseif V(latest_version) == V(current_version) then
+			return true, "Latest version too new"
+		end
+			
+		return true, "Version too new"
 	end
+	return true, "Version up to date"
+end
+
+--- Hooks the main menu to check for updates
+local mainMenuHook = Game.main_menu
+function Game:main_menu(ctx)
+	local r = mainMenuHook(self, ctx)
+	JOJO.update_check(SMODS.Mods[id], true)
+	return r
 end
