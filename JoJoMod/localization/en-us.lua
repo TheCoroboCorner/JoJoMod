@@ -28,7 +28,6 @@ return {
 			}
 		},
 		Joker = {
-			-- Normal Stand Jokers
 			j_jojo_stand_starPlatinum = {
 				name = 'Star Platinum',
 				text = {
@@ -153,7 +152,7 @@ return {
 			},
 			j_jojo_stand_atomHeartFather = {
 				name = 'Atom Heart Father',
-				text = { -- Note to self - Update this to have a tag for Stand Arrow when it's made
+				text = {
 					"If {C:spectral}Stand Arrow{} is used, creates",
 					"a {C:attention,T:e_negative}negative copy{} and {C:red,E:2}self destructs"
 				}
@@ -200,7 +199,7 @@ return {
 			},
 			j_jojo_stand_blackSabbath = {
 				name = 'Black Sabbath',
-				text = { -- Note to self - Update this to have a tag for Stand Arrow when it's made
+				text = {
 					"If {C:spectral}Stand Arrow{} is used,",
 					"target {C:legendary}Requiem Joker{} is made {C:attention,T:e_negative}negative,",
 					"{C:red,E:2}self destructs"
@@ -215,7 +214,7 @@ return {
 			},
 			j_jojo_stand_sixPistols = {
 				name = 'Six Pistols',
-				text = { -- Note to self - Update this to have a tag for Bullet when it's made
+				text = {
 					"When {C:attention}Blind {}is selected, creates a {C:attention,T:e_negative}negative",
 					"{C:tarot,T:c_jojo_bullet}Bullet {}card. After {C:attention}sixth{} card is created,",
 					"{C:red,E:2}self destructs",
@@ -288,7 +287,7 @@ return {
 			},
 			j_jojo_stand_softAndWet = {
 				name = 'Soft & Wet',
-				text = { -- Note to self - Update this to have a tag for Bubble when it's made
+				text = {
 					"When {C:attention}Blind {}is selected, creates",
 					"a {C:attention,T:e_negative}negative{} {C:tarot}Bubble{} card"
 				}
@@ -309,10 +308,10 @@ return {
 					"{C:attention}+#1#{} Joker slot"
 				}
 			},
-			-- Requiem Stand Jokers
+			
 			j_jojo_requiem_silverChariot = {
 				name = 'Chariot Requiem',
-				text = { -- Note to self - Update this to have a tag for Eternal
+				text = {
 					"Randomizes the played hand's {C:spectral}enhancements{}, {C:tarot}editions{},",
 					"and {C:planet}seals{} among themselves, {C:green}#1# in #2#{} chance to",
 					"add a new {C:spectral}enhancement{}, {C:tarot}edition{}, or {C:planet}seal"
@@ -352,7 +351,7 @@ return {
 			},
 			j_jojo_requiem_madeInHeaven = {
 				name = 'Made In Heaven',
-				text = { -- Note to self - Update this to have a tag for skip tags
+				text = {
 					"{X:green,C:white}X#5#{} Speed when Blind is selected",
 					"{C:inactive}(Currently {C:chips}+#1# {C:inactive}Chips, {C:mult}+#2# {C:inactive}Mult,",
 					"{X:mult,C:white}X#3#{C:inactive} Mult, and {X:green,C:white}X#4#{C:inactive} Speed)"
@@ -384,7 +383,7 @@ return {
 			},
 			j_jojo_requiem_softAndWet = {
 				name = 'Soft & Wet : Go Beyond',
-				text = { -- Note to self - Update this to have a tag for Bubble when it's made
+				text = {
 					"When {C:attention}Blind {}is selected, creates",
 					"a {C:attention,T:e_negative}negative{}{C:spectral} Spinning Bubble{} card"
 				}
