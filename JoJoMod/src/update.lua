@@ -69,7 +69,7 @@ function check_version(overflowProtection)
 		local url = (not target_version or target_version == "-1") and string.format("https://api.github.com/repos/%s/%s/releases/latest", git_owner, git_repo)
 					or string.format("https://api.github.com/repos/%s/%s/releases/tags/%s", git_owner, git_repo, 'v' .. target_version)
 		
-		local body, err = curl_fetch(url)
+		local body, err = pcall(curl_fetch(url))
 		if not body then
 			url = string.format("https://api.github.com/repos/%s/%s/releases/tags/%s", git_owner, git_repo, target_version)
 			body, err = curl_fetch(url)
@@ -96,12 +96,12 @@ function check_version(overflowProtection)
 			return nil, nil, nil
 		end
 	
-		local release_json = curl_fetch("https://api.github.com/repos/skyline69/balatro-mod-index/releases/latest")
+		local release_json = pcall(curl_fetch("https://api.github.com/repos/skyline69/balatro-mod-index/releases/latest"))
 		local release = json.decode(release_json)
 		local tag = release.tag.name
 		
 		local meta_url = ("https://api.github.com/repos/skyline69/balatro-mod-index/contents/mods/%s/meta.json?ref=%s"):format(mod_index_id, tag)
-		local raw_json = curl_fetch(meta_url)
+		local raw_json = pcall(curl_fetch(meta_url))
 		
 		git_owner, git_repo = raw_json.repo:match("^github%.com[:/]+([^/]+)/([^/]+)(?:%.git)?/?$")
 		

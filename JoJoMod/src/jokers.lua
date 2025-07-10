@@ -622,7 +622,7 @@ SMODS.Joker {
 	blueprint_compat = false,
 	
 	atlas = "stands",
-	pos = { x = 0, y = 6 },
+	pos = { x = 2, y = 6 },
 	
 	calculate = function(self, card, context)
 		if context.card_added and context.card.ability.consumeable then
