@@ -34,11 +34,19 @@ local current_mod = nil
 --- 	The URL in question is inputted, then it outputs the corresponding JSON file for its body component.
 local function curl_fetch(url)
 	local cmd = ('curl -sL "%s"'):format(url:gsub('"','\\"'))
+	
 	local fp = io.popen(cmd, "r")
-	assert(fp, "curl not available")
+	if not fp then
+		print("[PHOTON] cURL not available; stopping download checks...")
+	end
+	
 	local body = fp:read("*a")
+	
 	local ok, _, exit = fp:close()
-	assert(ok, ("curl exited with code %s"):format(tostring(exit)))
+	if not ok then
+		print(string.format("[PHOTON] cURL exited with code %s", tostring(exit))) 
+	end
+	
 	return body
 end
 
@@ -61,60 +69,92 @@ local function parse_release(body)
 	end
 end
 
+--- Checks if there is a target version specified.
+local function target_version_is_valid()
+	return target_version and target_version ~= '-1'
+end
+
+--- Checks if it's possible to access the GitHub repo directly.
+local function direct_github_link_available()
+	return git_owner and git_repo
+end
+
+--- Checks if it's possible to use the Balatro Mod Index.
+local function mod_index_link_available()
+	return mod_index_id
+end
+
+--- Fetches the version via the GitHub page directly.
+local function fetch_version_from_github_link()
+	local url = ''
+	
+	if target_version_is_valid() then
+		url = string.format("https://api.github.com/repos/%s/%s/releases/tags/%s", git_owner, git_repo, 'v' .. target_version)
+	else
+		url = string.format("https://api.github.com/repos/%s/%s/releases/latest", git_owner, git_repo)
+	end
+	
+	local ok, body = pcall(function() return curl_fetch(url) end)
+	if not ok or not body then
+		url = string.format("https://api.github.com/repos/%s/%s/releases/tags/%s", git_owner, git_repo, target_version)
+		ok, body = pcall(function() return curl_fetch(url) end)
+		if not ok or not body then
+			print("[PHOTON] Fetch failed:", body)
+			return nil
+		end
+	end
+	
+	local tag, asset_url, perr = parse_release(body)
+	if not tag then
+		if body.message == "No server is currently available to service your request. Sorry about that. Please try resubmitting your request and contact us if the problem persists." then
+			print("[PHOTON] Network connection error. Connection canceled.")
+		else
+			print("[PHOTON] Couldn't parse JSON - tag_name missing. Error:", body.message)
+		end
+		return nil, nil, perr
+	end
+	
+	return tag, asset_url, nil
+end
+
+--- Fetches the version via the Balatro Mod Manager index using the GitHub link in the metadata.
+local function fetch_version_from_bmm_index()
+	local index_url = "https://api.github.com/repos/skyline69/balatro-mod-index/releases/latest"
+
+	local _, release_json = pcall(function() return curl_fetch(index_url) end)
+	local release = json.decode(release_json)
+	local tag = release.tag.name
+	
+	local meta_url = string.format("https://api.github.com/repos/skyline69/balatro-mod-index/contents/mods/%s/meta.json?ref=%s", mod_index_id, tag)
+	local _, raw_json = pcall(function() return curl_fetch(meta_url) end)
+	
+	git_owner, git_repo = raw_json.repo:match("^github%.com[:/]+([^/]+)/([^/]+)(?:%.git)?/?$")
+	
+	if direct_github_link_available() then
+		return fetch_version_from_github_link()
+	end
+	
+	print("[PHOTON] Couldn't find a valid GitHub link for mod", id)
+	return nil, nil, nil
+end
+	
 --- Returns the tag and asset_url of the mod you specified in your metadata file with the git_owner and git_repo slots.
 ---		It constructs the URL of the Github project associated with the name and repo listed,
 --- then it feeds that through to parse_release() and returns what it has.
-function check_version(overflowProtection)	
-	if git_owner and git_repo then
-		local url = (not target_version or target_version == "-1") and string.format("https://api.github.com/repos/%s/%s/releases/latest", git_owner, git_repo)
-					or string.format("https://api.github.com/repos/%s/%s/releases/tags/%s", git_owner, git_repo, 'v' .. target_version)
-		
-		local body, err = pcall(curl_fetch(url))
-		if not body then
-			url = string.format("https://api.github.com/repos/%s/%s/releases/tags/%s", git_owner, git_repo, target_version)
-			body, err = curl_fetch(url)
-			if not body then
-				print("Fetch failed:", err)
-				return nil
-			end
-		end
-		
-		local tag, asset_url, perr = parse_release(body)
-		if not tag then
-			if body.message == "No server is currently available to service your request. Sorry about that. Please try resubmitting your request and contact us if the problem persists." then
-				print("Network connection error. Connection canceled.")
-			else
-				print("Couldn't parse JSON - tag_name missing")
-			end
-			return nil, nil, perr
-		end
-		
-		return tag, asset_url, nil
-	elseif mod_index_id then
-		if overflowProtection then
-			print("Fetch failed: invalid repo")
-			return nil, nil, nil
-		end
-	
-		local release_json = pcall(curl_fetch("https://api.github.com/repos/skyline69/balatro-mod-index/releases/latest"))
-		local release = json.decode(release_json)
-		local tag = release.tag.name
-		
-		local meta_url = ("https://api.github.com/repos/skyline69/balatro-mod-index/contents/mods/%s/meta.json?ref=%s"):format(mod_index_id, tag)
-		local raw_json = pcall(curl_fetch(meta_url))
-		
-		git_owner, git_repo = raw_json.repo:match("^github%.com[:/]+([^/]+)/([^/]+)(?:%.git)?/?$")
-		
-		return check_version(true)
+function check_version()	
+	if direct_github_link_available() then
+		return fetch_version_from_github_link()
+	elseif mod_index_link_available() then
+		return fetch_version_from_bmm_index()
 	end
 end
 
---- Downloads the file in question using Curl.
+--- Downloads the file in question using cURL.
 ---		It accesses the Github repo you specified earlier and either downloads the item you specified with the
 ---	download_suffix parameter, or it does the default, whatever that may be (though the default is fine, it does
 ---	seem to work fine, at least for me).
 local function download_file(url, dest_path)
-	local cmd = ('curl -sL -A "ModUpdater" -o "%s" "%s"'):format(dest_path, url)
+	local cmd = ('curl -sL -A "Photon" -o "%s" "%s"'):format(dest_path, url)
 	local success = os.execute(cmd)
 	return success == true or success == 0
 end
@@ -126,51 +166,75 @@ local function get_subdir(path)
 	end
 end
 
---- Unzips the zip file in question and places it in the correct directory.
----		Windows-based and Unix-based systems work different, so you do have to differentiate them first, but
----	in the Windows section, it first deletes whatever files are in the target location (make sure to have a backup!)
---- just so there's no issues with replacing files. Next, it unzips the zip file into a temp folder, then it unzips
---- the specified subdirectory (or just the whole thing if no subdirectory is specified) into the target location.
---- Finally, it deletes the temp folder and the zip file, and renames the folder if it can, to the target name (just
---- in case no subdirectory was mentioned). 
---- Linux is similar, except it has the functionality of the first few steps built-in, if I'm reading this right.
-local function unzip_file(zip_path)
-	mod_path = mod_path:gsub("/", "\\")
-	zip_path = zip_path:gsub("/", "\\")
-
-	local tmp_dir = mod_path .. "_tmp"
-	local is_windows = package.config:sub(1,1) == '\\'
-	local ok1, ok2, ok3
-	
-	if is_windows then
-		os.execute(('if exist "%s" rmdir /S /Q "%s"'):format(tmp_dir, tmp_dir))
-		os.execute(('if exist "%s" rmdir /S /Q "%s"'):format(mod_path, mod_path))
-		ok1 = os.execute(string.format('powershell -NoProfile -Command "Expand-Archive -LiteralPath %q -DestinationPath %q -Force"', zip_path, tmp_dir))
-		
-		local subfolder = get_subdir(tmp_dir)
-		if subfolder and (ok1 == true or ok1 == 0) then
-			local src_path = subpath and tmp_dir .. "\\" .. subfolder .. "\\" .. subpath or tmp_dir .. "\\" .. subfolder
-			ok2 = os.execute(string.format('powershell -NoProfile -Command "Move-Item -Path %q -Destination %q -Force"', src_path, mod_path))
-		else 
-			ok2 = false
-		end
-		
-		if (ok2 == true or ok2 == 0) then
-			ok3 = os.execute(string.format('rmdir /S /Q "%s"', tmp_dir))
-		end
-	else
-		ok1 = os.execute(string.format('unzip -o %q %q\'*\' -d %q', zip_path, subpath and string.format("%s-%s\\%s", repo, tag, subpath) or string.format("%s-%s", repo, tag), mod_path))
-		ok2 = true
-		ok3 = true
+--- Unzips the file in question for Windows-based systems.
+local function unzip_windows(tmp_dir, zip_path)
+	local function ok_check(ok)
+		return ok == true or ok == 0
 	end
 	
-	local ok4 = os.remove(zip_path)
+	local ok1 = false
+	local ok2 = false
+	local ok3 = false
+	
+	mod_path = mod_path:gsub("/", "\\")
+	zip_path = zip_path:gsub("/", "\\")
+	
+	os.execute(string.format('if exist "%s" rmdir /S /Q "%s"', tmp_dir, tmp_dir))
+	os.execute(string.format('if exist "%s" rmdir /S /Q "%s"', mod_path, mod_path))
+	
+	ok1 = os.execute(string.format('powershell -NoProfile -Command "Expand-Archive -LiteralPath %q -DestinationPath %q -Force"', zip_path, tmp_dir))
+	
+	local subfolder = get_subdir(tmp_dir)
+	if subfolder and ok_check(ok1) then
+		local src_path = subpath and tmp_dir .. "\\" .. subfolder .. "\\" .. subpath or tmp_dir .. "\\" .. subfolder
+		ok2 = os.execute(string.format('powershell -NoProfile -Command "Move-Item -Path %q -Destination %q -Force"', src_path, mod_path))
+	end
+	
+	if ok_check(ok2) then
+		ok3 = os.execute(string.format('rmdir /S /Q "%s"', tmp_dir))
+	end
+	
+	return ok_check(ok1) and ok_check(ok2) and ok_check(ok3)
+end
+
+--- Unzips the file in question for Unix-based systems.
+local function unzip_linux(zip_path)
+	local function ok_check(ok)
+		return ok == true or ok == 0
+	end
+
+	local command_base = 'unzip -o %q %q\'*\' -d %q'
+
+	local proper_subpath = ''
+	if subpath then
+		proper_subpath = string.format("%s-%s\\%s", repo, tag, subpath)
+	else
+		proper_subpath = string.format("%s-%s", repo, tag)
+	end
+
+	local ok = os.execute(string.format(command_base, zip_path, proper_subpath, mod_path))
+	
+	return ok_check(ok)
+end
+
+--- Unzips the zip file in question and places it in the correct directory.
+---		Windows-based and Unix-based systems work different, so you do have to differentiate them first, but
+---	after that, it delegates them to other functions, before removing the zip file and renaming the folder.
+local function unzip_file(zip_path)
+	local tmp_dir = mod_path .. "_tmp"
+	local is_windows = package.config:sub(1,1) == '\\'
+	
+	local unzip_ok = false
+	if is_windows then
+		unzip_ok = unzip_windows(tmp_dir, zip_path)
+	else
+		unzip_ok = unzip_linux(zip_path)
+	end
+	
+	local rmdir_ok = os.remove(zip_path)
 	os.rename(string.sub(zip_path, -4), mod_path:match("\\([^\\]+)$"))
 	
-	return  (ok1 == true or ok1 == 0) and
-			(ok2 == true or ok2 == 0) and
-			(ok3 == true or ok3 == 0) and
-			ok4 == true
+	return unzip_ok and rmdir_ok
 end
 
 --- Downloads the latest update for the mod in question.
@@ -182,15 +246,15 @@ local function download_update()
 	if (git_owner and git_repo) or (mod_index_id) then
 		local tag, asset_url, err = check_version()
 		if not tag then
-			print("Version check failed:", err)
+			print("[PHOTON] Version check failed:", err)
 			return false, nil
 		end
 		
 		local zip_url = asset_url or string.format("https://github.com/%s/%s/archive/%s.zip", git_owner, git_repo, tag)
-		local zip_path = ("Mods\\%s-%s.zip"):format(git_repo, tag)
+		local zip_path = string.format("Mods\\%s-%s.zip", git_repo, tag)
 		
 		if not download_file(zip_url, zip_path) then
-			print("Failed to download update from " ..zip_url)
+			print("[PHOTON] Failed to download update from " ..zip_url)
 			return false, nil
 		end
 		
@@ -203,7 +267,7 @@ end
 --- 	Attempts to unzip it using the unzip_file function, placing a check on it otherwise.
 local function install_update(zip_path)
 	if not unzip_file(zip_path) then
-		print("Failed to unzip " ..zip_path)
+		print("[PHOTON] Failed to unzip " ..zip_path)
 		return false
 	end
 	
@@ -214,7 +278,7 @@ end
 --- 	These are all the variables that are mentioned at the top of the file, that you find
 ---	in the metadata json file. We use the local files up there mainly because we have them there
 --- anyway for demonstrative purposes and it saves us the time of array-accessing current_mod.
-local function updateArgs()
+local function update_args()
 	if not current_mod then return nil end
 	
 	git_owner = current_mod.git_owner
@@ -236,7 +300,7 @@ end
 local function update_mod(mod, restart)
 	restart = restart or true
 	current_mod = mod or current_mod
-	updateArgs()
+	update_args()
 	
 	local download_result, download_path = download_update()
 	if not download_result then return false end
@@ -407,6 +471,8 @@ local function check_available_updates()
 	
 	for _, mod in ipairs(mods) do
 		local args = SMODS.Mods[mod]
+		
+		JOJO.update_check = JOJO.update_check or function(_args) return false, "update_check function not found" end -- Just in case this isn't replaced. This should ideally be replaced.
 		local __, status_text = JOJO.update_check(args)
 		
 		if status_text == "Version up to date" or status_text == "Latest version too new" then
@@ -421,7 +487,7 @@ local function check_available_updates()
 			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.too_old)
 		end
 		
-		if status_text == "There appears to have been a connection error" or status_text == "args not found" then
+		if status_text == "There appears to have been a connection error" or status_text == "args not found" or status_text == "update_check function not found" then
 			print("Connection error finding the mod details of " .. (SMODS.Mods[mod].name or "[name missing]"))
 			mod_status[mod] = bit.bor((mod_status[mod] or 0), STATUS_FLAGS.err)
 		end		
@@ -445,7 +511,7 @@ JOJO.update_check = function(args, prompt)
 	if not args then return false, "args not found" end
 	
 	-- Sets all the local variables properly
-	updateArgs()
+	update_args()
 	
 	local git_version = check_version()
 	if not git_version then return nil, "There appears to have been a connection error" end -- This should only happen if there's been a connection error
